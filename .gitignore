@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+ENV/
+env/
+.env
+.venv
+
+# IDE / Editor configuration
+.vscode/
+.idea/
+.gemini/
+antigravity-ide/
+
+# Flask / Web App upload files
+uploads/*
+!uploads/.gitkeep

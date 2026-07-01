@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroNine — Think. Predict. Recognize.</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css') }}">
+</head>
+<body class="splash-body">
+    <!-- Ambient particle background -->
+    <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
+    <!-- Glassmorphic Bento-inspired loading container -->
+    <div class="splash-card" id="splash-card">
+        <!-- Custom Neural circuit logo based on the digit "9" -->
+        <div class="logo-wrapper">
+            <svg class="neuro-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Custom linear gradients -->
+                    <linearGradient id="primary-glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                    <linearGradient id="circuit-secondary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#7895B2" />
+                        <stop offset="100%" stop-color="#566573" />
+                    </linearGradient>
+                    
+                    <!-- Advanced drop shadow glow -->
+                    <filter id="premium-glow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+
+                <!-- Outermost network halo -->
+                <circle cx="100" cy="95" r="75" fill="none" stroke="rgba(144, 202, 249, 0.08)" stroke-width="1" />
+                <!-- Secondary network ring -->
+                <circle cx="100" cy="95" r="55" fill="none" stroke="rgba(91, 124, 250, 0.05)" stroke-width="1.5" stroke-dasharray="8,6" />
+
+                <!-- Circuit connections & Synapses lines (neural connectivity paths) -->
+                <!-- Connection lines to outer nodes -->
+                <line x1="100" y1="95" x2="60" y2="70" stroke="rgba(144, 202, 249, 0.25)" stroke-width="1.5" stroke-dasharray="4,4" />
+                <line x1="100" y1="95" x2="140" y2="70" stroke="rgba(144, 202, 249, 0.25)" stroke-width="1.5" stroke-dasharray="4,4" />
+                <line x1="100" y1="95" x2="100" y2="50" stroke="rgba(91, 124, 250, 0.3)" stroke-width="1.5" />
+                <line x1="100" y1="95" x2="90" y2="155" stroke="rgba(120, 149, 178, 0.3)" stroke-width="1.5" />
+                
+                <!-- Circuit-inspired '9' paths (Vector drawing of numeral '9') -->
+                <!-- Circle loop of the '9' at (100, 75) -->
+                <path class="logo-path logo-loop" d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#primary-glow-grad)" stroke-width="5" stroke-linecap="round" filter="url(#premium-glow)" />
+                <!-- Connecting curve stem of the '9' from loop right edge down to bottom left -->
+                <path class="logo-path logo-stem" d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#primary-glow-grad)" stroke-width="5" stroke-linecap="round" filter="url(#premium-glow)" />
+
+                <!-- Neural network nodes at synapses (represented by glowing dots) -->
+                <g class="nodes-group">
+                    <!-- Outer circuit connector nodes -->
+                    <circle class="logo-node node-pulse-slow" cx="60" cy="70" r="4.5" fill="#7895B2" />
+                    <circle class="logo-node node-pulse-slow" cx="140" cy="70" r="4.5" fill="#7895B2" />
+                    <circle class="logo-node node-pulse-fast" cx="100" cy="50" r="5" fill="#90CAF9" filter="url(#premium-glow)" />
+                    <circle class="logo-node node-pulse-mid" cx="100" cy="100" r="4" fill="#6B7A8F" />
+                    <circle class="logo-node node-pulse-slow" cx="130" cy="75" r="5.5" fill="#5B7CFA" filter="url(#premium-glow)" />
+                    <!-- Stem end junction node -->
+                    <circle class="logo-node node-pulse-fast" cx="90" cy="155" r="6" fill="#90CAF9" filter="url(#premium-glow)" />
+                    <!-- Input gateway node inside the '9' loop -->
+                    <circle class="logo-node node-pulse-mid" cx="100" cy="75" r="7" fill="#5B7CFA" filter="url(#premium-glow)" />
+                </g>
+            </svg>
+        </div>
+
+        <!-- App Brand Details -->
+        <h1 class="brand-title">Neuro<span class="brand-accent">Nine</span></h1>
+        <p class="brand-tagline">Think. Predict. Recognize.</p>
+
+        <!-- Loading Interface Bento Cell -->
+        <div class="loader-box">
+            <!-- Typing feedback text -->
+            <div class="status-msg-container">
+                <span class="status-text" id="status-text">Initializing AI Engine...</span>
+                <span class="cursor">|</span>
+            </div>
+            
+            <!-- Progress Line -->
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            
+            <!-- Percentage Display -->
+            <div class="percent-container">
+                <span class="percent-text" id="percent-text">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Scripts -->
+    <script src="{{ url_for('static', filename='js/splash.js') }}"></script>
+</body>
+</html>

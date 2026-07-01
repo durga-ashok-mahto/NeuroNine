@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}500 - Server Error - NeuroNine{% endblock %}
+
+{% block content %}
+<div class="container error-container">
+    <div class="error-content">
+        <h1 class="error-code">500</h1>
+        <h2>Server Error</h2>
+        <p>Something went wrong on our side. We are scanning the tensor pipelines for issues.</p>
+        <div class="actions">
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

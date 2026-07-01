@@ -1,0 +1,146 @@
+/* NeuroNine Premium Camera Style Sheet */
+
+.camera-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 650px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.camera-card {
+    width: 100%;
+    border-radius: 24px;
+    padding: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Viewport stream window */
+.camera-viewport {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    background: #0b0f19;
+}
+
+#camera-stream {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    transform: scaleX(-1); /* Mirror camera for natural movement */
+}
+
+#capture-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    transform: scaleX(-1); /* Match camera mirroring */
+    animation: captureFlash 0.3s ease;
+}
+
+@keyframes captureFlash {
+    0% { filter: brightness(3) contrast(1.5); }
+    100% { filter: brightness(1) contrast(1); }
+}
+
+/* Offline Placeholder Overlay */
+.camera-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    color: var(--text-sub);
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cam-placeholder-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(91, 124, 250, 0.1);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cam-placeholder-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.cam-placeholder-title {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.cam-placeholder-desc {
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+/* Toolbar Control list buttons */
+.camera-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 320px;
+}
+
+/* Prediction Actions button */
+.predict-actions {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 0.5rem;
+}
+
+.btn-stop {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.15);
+}
+
+.btn-stop:hover:not(:disabled) {
+    background: #ff6b6b !important;
+    color: #ffffff !important;
+    border-color: #ff6b6b !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2) !important;
+}
+
+:root.light-theme .btn-stop {
+    background: rgba(214, 48, 49, 0.08);
+    color: #d63031;
+    border-color: rgba(214, 48, 49, 0.15);
+}
+
+:root.light-theme .btn-stop:hover:not(:disabled) {
+    background: #d63031 !important;
+    border-color: #d63031 !important;
+    box-shadow: 0 4px 12px rgba(214, 48, 49, 0.2) !important;
+}

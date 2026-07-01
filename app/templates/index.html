@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}NeuroNine - Think. Predict. Recognize.{% endblock %}
+
+{% block content %}
+<div class="container hero-container">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to <span class="text-glow">NeuroNine</span></h1>
+        <p class="hero-tagline">Think. Predict. Recognize.</p>
+        <div class="skeleton-badge">SKELETON MODE ACTIVE</div>
+        <p class="hero-description">
+            NeuroNine is a premium AI-powered Handwritten Digit Recognition web application using a deep Convolutional Neural Network (CNN) trained on the MNIST dataset, processing input signatures with OpenCV.
+        </p>
+        <div class="actions">
+            <a href="{{ url_for('main.workspace') }}" class="btn btn-primary" id="btn-start-workspace">Open Drawing Workspace</a>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary" id="btn-start-dashboard">View Model Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

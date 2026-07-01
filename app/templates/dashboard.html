@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — NeuroNine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Core Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body class="dashboard-body">
+
+    <!-- 1. Left Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo Header -->
+        <div class="logo-section">
+            <!-- Custom neural net logo representation -->
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="sidebar-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                </defs>
+                <path d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" />
+                <path d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" stroke-linecap="round" />
+                <circle cx="100" cy="75" r="14" fill="#5B7CFA" />
+            </svg>
+            <span class="logo-title"><span class="logo-accent">Neuro</span>Nine</span>
+        </div>
+
+        <!-- Sidebar Navigation Menu links -->
+        <nav class="sidebar-menu">
+            <a href="{{ url_for('main.dashboard') }}" class="menu-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                Dashboard
+            </a>
+            <a href="{{ url_for('main.workspace') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Draw Digit
+            </a>
+            <a href="{{ url_for('main.upload') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Image
+            </a>
+            <a href="{{ url_for('main.camera') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                Camera
+            </a>
+            <a href="{{ url_for('main.history') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Prediction History
+            </a>
+            <a href="{{ url_for('main.analytics') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Analytics
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.dataset') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                Dataset
+            </a>
+            <a href="{{ url_for('main.cnn_info') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                CNN Information
+            </a>
+            <a href="{{ url_for('main.reports') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Reports
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.settings_route') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a>
+            <a href="{{ url_for('main.about') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                About Developer
+            </a>
+            <a href="{{ url_for('main.logout') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
+        </nav>
+
+        <!-- User profile cell at footer of sidebar -->
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">U</div>
+            <div class="user-info">
+                <div class="user-name">User Account</div>
+                <div class="user-role">ML Practitioner</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. Main content display panels -->
+    <main class="main-panel">
+        
+        <!-- Top Navigation Area -->
+        <header class="top-nav">
+            <!-- Mobile Toggle Menu Button -->
+            <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Toggle sidebar menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <!-- Search Bar bento cell -->
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" placeholder="Search operations, models...">
+            </div>
+
+            <!-- Header Controls Panel -->
+            <div class="nav-controls">
+                <!-- Sound Toggle -->
+                <button class="control-btn sound-on" id="sound-toggle" aria-label="Toggle ui sound cues">
+                    <div class="sound-waves">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </button>
+
+                <!-- Language Selector Dropdown button -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="lang-btn">
+                        <span>EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button class="control-btn" id="theme-toggle" aria-label="Toggle color theme">
+                    <!-- Dual icon: sun representation -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line>
+                        <line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>
+                    </svg>
+                </button>
+
+                <!-- Notification Bell Button -->
+                <button class="control-btn" id="notification-btn" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="badge"></span>
+                </button>
+
+                <!-- Profile Cell link -->
+                <div class="nav-profile" onclick="window.location.href='{{ url_for('main.settings_route') }}'">
+                    <div class="avatar-wrapper">
+                        <div class="profile-avatar">U</div>
+                        <span class="status-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable content grid workspace -->
+        <div class="dashboard-content">
+            
+            <!-- 3. Welcome Section with Live Neural net canvas animation -->
+            <section class="welcome-banner glass-effect">
+                <div class="welcome-info">
+                    <h1 class="welcome-title">Welcome to <span class="accent">NeuroNine</span></h1>
+                    <p class="welcome-subtitle">Think. Predict. Recognize.</p>
+                </div>
+                <!-- Neural Network animation frame -->
+                <div class="canvas-container">
+                    <canvas id="neural-net-canvas"></canvas>
+                </div>
+            </section>
+
+            <!-- 4. Premium Bento Grid Panel -->
+            <section class="bento-grid">
+                
+                <!-- Bento Cell 1: Draw Digit (Launcher Card) -->
+                <div class="bento-card glass-effect span-col-2" data-route="{{ url_for('main.workspace') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Draw Digit</h3>
+                        <p class="card-description">Interactive canvas workspace to write numbers and predict values using our deep neural network backend.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 2: Upload Image (Launcher Card) -->
+                <div class="bento-card glass-effect" data-route="{{ url_for('main.upload') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Upload Image</h3>
+                        <p class="card-description">Classify pre-existing images from local folders instantly.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 3: Camera Recognition (Launcher Card) -->
+                <div class="bento-card glass-effect" data-route="{{ url_for('main.camera') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Camera</h3>
+                        <p class="card-description">Real-time camera classification via video feed.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 4: AI Prediction (Model Status Card) -->
+                <div class="bento-card glass-effect span-col-2" data-route="{{ url_for('main.cnn_info') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">AI Engine</h3>
+                        <p class="card-description">NeuroNine MNIST CNN Model Active. Inferences processed locally in under 12ms via OpenCV and Keras.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 5: Confidence Score (Interactive Accuracy Radial Card) -->
+                <div class="bento-card glass-effect span-row-2" data-route="{{ url_for('main.analytics') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+                    </div>
+                    <div class="live-telemetry">
+                        <div class="radial-progress">
+                            <svg class="radial-svg">
+                                <circle class="circle-bg" cx="45" cy="45" r="40" />
+                                <circle class="circle-val" cx="45" cy="45" r="40" />
+                            </svg>
+                            <span class="radial-label">99.1%</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Accuracy Rate</h3>
+                        <p class="card-description">Telemetry test accuracy on MNIST verification sets.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 6: Dataset Status (MNIST Database Overview Card) -->
+                <div class="bento-card glass-effect" data-route="{{ url_for('main.dataset') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Dataset</h3>
+                        <p class="card-description">MNIST repository. 70,000 processed digits.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 7: CNN Model Status (Neural layers description) -->
+                <div class="bento-card glass-effect span-col-2" data-route="{{ url_for('main.cnn_info') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                    </div>
+                    <div class="cnn-stats">
+                        <div class="cnn-stat-row">
+                            <span class="cnn-stat-label">Model Type</span>
+                            <span class="cnn-stat-val">Sequential CNN</span>
+                        </div>
+                        <div class="cnn-stat-row">
+                            <span class="cnn-stat-label">Main Layers</span>
+                            <span class="cnn-stat-val">Conv2D, MaxPool, Dense</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Network Architecture</h3>
+                        <p class="card-description">Trained on MNIST over 15 epochs. Layers map feature nodes recursively.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Cell 8: Recent Predictions (Interactive logs panel) -->
+                <div class="bento-card glass-effect span-col-3 span-row-2" data-route="{{ url_for('main.history') }}">
+                    <div class="card-header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="history-list">
+                        <!-- Mock prediction logs items -->
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <span class="hist-icon">3</span>
+                                <div class="hist-meta">
+                                    <span class="hist-title">Handdrawn Digit classification</span>
+                                    <span class="hist-date">2 minutes ago</span>
+                                </div>
+                            </div>
+                            <span class="hist-conf">98.4% Confidence</span>
+                        </div>
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <span class="hist-icon">5</span>
+                                <div class="hist-meta">
+                                    <span class="hist-title">Uploaded digit-five.png file</span>
+                                    <span class="hist-date">10 minutes ago</span>
+                                </div>
+                            </div>
+                            <span class="hist-conf">99.7% Confidence</span>
+                        </div>
+                        <div class="history-item">
+                            <div class="hist-left">
+                                <span class="hist-icon">9</span>
+                                <div class="hist-meta">
+                                    <span class="hist-title">Handdrawn Digit classification</span>
+                                    <span class="hist-date">1 hour ago</span>
+                                </div>
+                            </div>
+                            <span class="hist-conf">95.1% Confidence</span>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">Recent Predictions</h3>
+                        <p class="card-description">Real-time prediction trace logs indicating inputs classified with corresponding confidences.</p>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <!-- Page Javascript controller -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — NeuroNine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body class="login-body">
+    <!-- Particle Canvas Background -->
+    <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
+    <!-- Success Toast Notification -->
+    <div id="toast-success" class="toast-notification">
+        <span class="toast-icon">✓</span>
+        <span id="toast-text">Authentication successful! Welcome to NeuroNine.</span>
+    </div>
+
+    <!-- Glassmorphic Bento-Inspired Container -->
+    <div class="login-card" id="login-card">
+        <!-- Neural network logo representation (numeral 9 style) -->
+        <div class="logo-wrapper">
+            <svg class="neuro-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                    <filter id="glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <!-- Outer paths representing connections -->
+                <path d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#logo-grad)" stroke-width="5" stroke-linecap="round" filter="url(#glow-filter)" />
+                <path d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#logo-grad)" stroke-width="5" stroke-linecap="round" filter="url(#glow-filter)" />
+                <!-- Core neural junction points -->
+                <circle cx="100" cy="50" r="5" fill="#90CAF9" />
+                <circle cx="130" cy="75" r="5.5" fill="#5B7CFA" />
+                <circle cx="90" cy="155" r="6" fill="#90CAF9" />
+                <circle cx="100" cy="75" r="7" fill="#5B7CFA" />
+            </svg>
+        </div>
+
+        <!-- Typography -->
+        <h1 class="brand-title">Neuro<span class="brand-accent">Nine</span></h1>
+        <p class="brand-tagline">Think. Predict. Recognize.</p>
+
+        <!-- Form -->
+        <form class="login-form" id="login-form" novalidate>
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email-input" class="form-label">Email Address</label>
+                <div class="input-container">
+                    <input type="email" id="email-input" class="form-input" placeholder="name@domain.com" required autocomplete="username">
+                </div>
+                <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password-input" class="form-label">Password</label>
+                <div class="input-container">
+                    <input type="password" id="password-input" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle-btn" id="password-toggle" aria-label="Toggle password visibility">
+                        <!-- Eye icon SVG (eye open) -->
+                        <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <div class="invalid-feedback" id="password-error">Password field cannot be empty.</div>
+            </div>
+
+            <!-- Remember Me & Forgot Password Row -->
+            <div class="form-options">
+                <label class="remember-me-container">
+                    <input type="checkbox" id="remember-checkbox" class="custom-checkbox">
+                    <span>Remember me</span>
+                </label>
+                <a href="{{ url_for('main.forgot_password') }}" class="forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <!-- Action buttons bento cells -->
+            <div class="action-group">
+                <button type="submit" class="btn-login" id="btn-submit" disabled>
+                    <span class="spinner" id="btn-spinner"></span>
+                    <span id="btn-text">Authenticate</span>
+                </button>
+                <button type="button" class="btn-guest" id="btn-guest">
+                    Continue as Guest
+                </button>
+            </div>
+        </form>
+
+        <!-- Redirection footer links -->
+        <p class="register-footer">
+            New to NeuroNine? <a href="{{ url_for('main.register') }}" class="register-link">Create Account</a>
+        </p>
+    </div>
+
+    <!-- Client Script -->
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

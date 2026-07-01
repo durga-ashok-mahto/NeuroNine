@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeuroNine - Think. Predict. Recognize.{% endblock %}</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Premium Header Area Skeleton -->
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="{{ url_for('main.dashboard') }}" class="brand-logo" id="logo-home">
+                <span class="logo-accent">Neuro</span>Nine
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('main.dashboard') }}" class="nav-item" id="link-home">Home</a>
+                <a href="{{ url_for('main.workspace') }}" class="nav-item" id="link-workspace">Workspace</a>
+                <a href="{{ url_for('main.dashboard') }}" class="nav-item" id="link-dashboard">Dashboard</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Injection -->
+    <main class="app-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Skeleton -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p class="footer-copy">&copy; 2026 NeuroNine. Think. Predict. Recognize. Premium AI Web Application.</p>
+        </div>
+    </footer>
+
+    <!-- Core Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

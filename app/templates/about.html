@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Developer — NeuroNine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Core Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <style>
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .about-card {
+            border-radius: 24px;
+            padding: 2.2rem;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dev-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .dev-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), #90CAF9);
+            border-radius: 50%;
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 8px 25px rgba(91, 124, 250, 0.2);
+        }
+
+        .dev-details-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .dev-name {
+            font-family: var(--font-heading);
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .dev-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .dev-bio {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-sub);
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0 1.1rem;
+            height: 38px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+        }
+
+        .btn-github {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+        .btn-github:hover {
+            background: #ffffff;
+            color: #10141d;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.15);
+        }
+
+        .btn-linkedin {
+            background: rgba(10, 102, 194, 0.1);
+            color: #0a66c2;
+            border: 1px solid rgba(10, 102, 194, 0.2);
+        }
+        .btn-linkedin:hover {
+            background: #0a66c2;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(10, 102, 194, 0.25);
+        }
+
+        .btn-email {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+        .btn-email:hover {
+            background: #ff6b6b;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25);
+        }
+
+        .btn-portfolio {
+            background: rgba(91, 124, 250, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(91, 124, 250, 0.2);
+        }
+        .btn-portfolio:hover {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(91, 124, 250, 0.25);
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .spec-item {
+            background: rgba(10, 10, 15, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: left;
+        }
+
+        .spec-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .spec-value {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(91, 124, 250, 0.08);
+            border: 1px solid rgba(91, 124, 250, 0.15);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 600px) {
+            .spec-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <!-- 1. Left Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo Header -->
+        <div class="logo-section">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="sidebar-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                </defs>
+                <path d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" />
+                <path d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" stroke-linecap="round" />
+                <circle cx="100" cy="75" r="14" fill="#5B7CFA" />
+            </svg>
+            <span class="logo-title"><span class="logo-accent">Neuro</span>Nine</span>
+        </div>
+
+        <!-- Sidebar Navigation Menu links -->
+        <nav class="sidebar-menu">
+            <a href="{{ url_for('main.dashboard') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                Dashboard
+            </a>
+            <a href="{{ url_for('main.workspace') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Draw Digit
+            </a>
+            <a href="{{ url_for('main.upload') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Image
+            </a>
+            <a href="{{ url_for('main.camera') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                Camera
+            </a>
+            <a href="{{ url_for('main.history') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Prediction History
+            </a>
+            <a href="{{ url_for('main.analytics') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Analytics
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.dataset') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                Dataset
+            </a>
+            <a href="{{ url_for('main.cnn_info') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                CNN Information
+            </a>
+            <a href="{{ url_for('main.reports') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Reports
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.settings_route') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a>
+            <a href="{{ url_for('main.about') }}" class="menu-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                About Developer
+            </a>
+            <a href="{{ url_for('main.logout') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
+        </nav>
+
+        <!-- User profile cell at footer of sidebar -->
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">U</div>
+            <div class="user-info">
+                <div class="user-name">User Account</div>
+                <div class="user-role">ML Practitioner</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. Main content display panels -->
+    <main class="main-panel">
+        
+        <!-- Top Navigation Area -->
+        <header class="top-nav">
+            <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Toggle sidebar menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" placeholder="Search operations, models...">
+            </div>
+
+            <div class="nav-controls">
+                <button class="control-btn sound-on" id="sound-toggle" aria-label="Toggle ui sound cues">
+                    <div class="sound-waves">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </button>
+
+                <div class="lang-selector">
+                    <button class="lang-btn" id="lang-btn">
+                        <span>EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+
+                <button class="control-btn" id="theme-toggle" aria-label="Toggle color theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line>
+                        <line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>
+                    </svg>
+                </button>
+
+                <button class="control-btn" id="notification-btn" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+
+                <div class="nav-profile" onclick="window.location.href='{{ url_for('main.settings_route') }}'">
+                    <div class="avatar-wrapper">
+                        <div class="profile-avatar">U</div>
+                        <span class="status-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable content workspace -->
+        <div class="dashboard-content">
+            
+            <div class="about-container">
+                <!-- Head Title Block -->
+                <div style="width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;">
+                    <div>
+                        <!-- Breadcrumbs -->
+                        <div style="font-size: 0.72rem; color: var(--text-sub); margin-bottom: 0.45rem; display: flex; gap: 0.35rem; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                            <a href="{{ url_for('main.dashboard') }}" style="color: var(--text-sub); text-decoration: none;">Dashboard</a>
+                            <span>&gt;</span>
+                            <span style="color: var(--primary);">About Developer</span>
+                        </div>
+                        <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">About Developer</h2>
+                        <p class="instruction-text" style="text-align: left;">Project technical core metrics and developer specifications.</p>
+                    </div>
+                    <a href="{{ url_for('main.dashboard') }}" class="tool-btn" style="flex: none; padding: 0 1rem; height: 36px; text-decoration: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Back to Dashboard
+                    </a>
+                </div>
+
+                <!-- 1. Developer Bio Card -->
+                <div class="about-card glass-effect">
+                    <div class="dev-header">
+                        <div class="dev-avatar">ML</div>
+                        <div class="dev-details-info">
+                            <span class="dev-name">Machine Learning Developer</span>
+                            <span class="dev-title">Fullstack ML Engineer</span>
+                        </div>
+                    </div>
+
+                    <p class="dev-bio">
+                        Designed and engineered NeuroNine to demonstrate high-performance Convolutional Neural Networks running directly inside responsive glassmorphic interfaces. Leveraging TensorFlow, Keras, OpenCV processing models, and Flask backend logic pipelines to deploy optimized digit classification routines.
+                    </p>
+
+                    <!-- Interactive social redirects buttons -->
+                    <div class="social-links">
+                        <a href="https://github.com" target="_blank" class="social-btn btn-github">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                            GitHub
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-btn btn-linkedin">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            LinkedIn
+                        </a>
+                        <a href="mailto:developer@neuronine.ai" class="social-btn btn-email">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            Email
+                        </a>
+                        <a href="https://portfolio.neuronine.ai" target="_blank" class="social-btn btn-portfolio">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            Portfolio
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. Project Specifications Bento -->
+                <div class="spec-grid">
+                    <div class="spec-item glass-effect">
+                        <span class="spec-label">Project Name</span>
+                        <span class="spec-value">NeuroNine</span>
+                    </div>
+                    <div class="spec-item glass-effect">
+                        <span class="spec-label">Version</span>
+                        <span class="spec-value">1.0.0 (Stable)</span>
+                    </div>
+                    <div class="spec-item glass-effect">
+                        <span class="spec-label">Target Dataset</span>
+                        <span class="spec-value">MNIST Database</span>
+                    </div>
+                </div>
+
+                <!-- 3. Tech Stack Bento -->
+                <div class="about-card glass-effect">
+                    <div class="settings-header" style="margin-bottom: 1.25rem;">
+                        <span class="settings-title">Technologies & Frameworks</span>
+                    </div>
+                    
+                    <div class="tech-tags">
+                        <span class="tech-tag">CNN Architecture</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">Keras API</span>
+                        <span class="tech-tag">Flask Framework</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">OpenCV Preprocessing</span>
+                        <span class="tech-tag">NumPy</span>
+                        <span class="tech-tag">HTML5 / CSS3</span>
+                        <span class="tech-tag">Vanilla JS</span>
+                        <span class="tech-tag">MNIST Corpus</span>
+                        <span class="tech-tag">html2pdf.js</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

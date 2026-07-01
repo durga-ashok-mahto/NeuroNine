@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}404 - Page Not Found - NeuroNine{% endblock %}
+
+{% block content %}
+<div class="container error-container">
+    <div class="error-content">
+        <h1 class="error-code">404</h1>
+        <h2>Page Not Found</h2>
+        <p>The space you requested could not be resolved. Let's return back to base.</p>
+        <div class="actions">
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

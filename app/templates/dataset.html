@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST Dataset — NeuroNine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Core Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <style>
+        .dataset-header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .dataset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .dataset-card-meta {
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .dataset-card-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-sub);
+        }
+
+        .dataset-card-value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .badge-loaded {
+            background: rgba(0, 255, 102, 0.1);
+            color: #00ff66;
+            border: 1px solid rgba(0, 255, 102, 0.25);
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Sample Digit Grid */
+        .samples-section-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .samples-section-desc {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+        }
+
+        .sample-item {
+            border-radius: 16px;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(10, 10, 15, 0.2);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sample-item:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(91, 124, 250, 0.15);
+        }
+
+        .sample-canvas-preview {
+            width: 90px;
+            height: 90px;
+            background: #090c15;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .sample-canvas-preview svg {
+            width: 100%;
+            height: 100%;
+            stroke: #ffffff;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+        }
+
+        .sample-label {
+            font-family: monospace;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--text-sub);
+        }
+
+        @media (max-width: 800px) {
+            .samples-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .samples-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <!-- 1. Left Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo Header -->
+        <div class="logo-section">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="sidebar-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                </defs>
+                <path d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" />
+                <path d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" stroke-linecap="round" />
+                <circle cx="100" cy="75" r="14" fill="#5B7CFA" />
+            </svg>
+            <span class="logo-title"><span class="logo-accent">Neuro</span>Nine</span>
+        </div>
+
+        <!-- Sidebar Navigation Menu links -->
+        <nav class="sidebar-menu">
+            <a href="{{ url_for('main.dashboard') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                Dashboard
+            </a>
+            <a href="{{ url_for('main.workspace') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Draw Digit
+            </a>
+            <a href="{{ url_for('main.upload') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Image
+            </a>
+            <a href="{{ url_for('main.camera') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                Camera
+            </a>
+            <a href="{{ url_for('main.history') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Prediction History
+            </a>
+            <a href="{{ url_for('main.analytics') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Model Analytics
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.dataset') }}" class="menu-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                Dataset
+            </a>
+            <a href="{{ url_for('main.cnn_info') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                CNN Information
+            </a>
+            <a href="{{ url_for('main.reports') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Reports
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.settings_route') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a>
+            <a href="{{ url_for('main.about') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                About Developer
+            </a>
+            <a href="{{ url_for('main.logout') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
+        </nav>
+
+        <!-- User profile cell at footer of sidebar -->
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">U</div>
+            <div class="user-info">
+                <div class="user-name">User Account</div>
+                <div class="user-role">ML Practitioner</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. Main content display panels -->
+    <main class="main-panel">
+        
+        <!-- Top Navigation Area -->
+        <header class="top-nav">
+            <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Toggle sidebar menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" placeholder="Search operations, models...">
+            </div>
+
+            <div class="nav-controls">
+                <button class="control-btn sound-on" id="sound-toggle" aria-label="Toggle ui sound cues">
+                    <div class="sound-waves">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </button>
+
+                <div class="lang-selector">
+                    <button class="lang-btn" id="lang-btn">
+                        <span>EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+
+                <button class="control-btn" id="theme-toggle" aria-label="Toggle color theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line>
+                        <line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>
+                    </svg>
+                </button>
+
+                <button class="control-btn" id="notification-btn" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+
+                <div class="nav-profile" onclick="window.location.href='{{ url_for('main.settings_route') }}'">
+                    <div class="avatar-wrapper">
+                        <div class="profile-avatar">U</div>
+                        <span class="status-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable content workspace -->
+        <div class="dashboard-content">
+            
+            <div class="cnn-container" style="max-width: 1000px;">
+                <!-- Head Title Block -->
+                <div class="dataset-header-section">
+                    <div>
+                        <!-- Breadcrumbs -->
+                        <div style="font-size: 0.72rem; color: var(--text-sub); margin-bottom: 0.45rem; display: flex; gap: 0.35rem; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                            <a href="{{ url_for('main.dashboard') }}" style="color: var(--text-sub); text-decoration: none;">Dashboard</a>
+                            <span>&gt;</span>
+                            <span style="color: var(--primary);">Dataset</span>
+                        </div>
+                        <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">MNIST Dataset</h2>
+                        <p class="instruction-text" style="text-align: left;">Explore MNIST properties, sample classes, and training distributions.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.65rem; align-items: center;">
+                        <span class="badge-loaded">MNIST-LOADED: Active</span>
+                        <a href="{{ url_for('main.dashboard') }}" class="tool-btn" style="flex: none; padding: 0 1rem; height: 36px; text-decoration: none;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 1. Statistics Cards -->
+                <div class="dataset-grid">
+                    <div class="dataset-card-meta glass-effect">
+                        <span class="dataset-card-label">Dataset Name</span>
+                        <span class="dataset-card-value">MNIST</span>
+                    </div>
+                    <div class="dataset-card-meta glass-effect">
+                        <span class="dataset-card-label">Training Set Size</span>
+                        <span class="dataset-card-value">60,000 Images</span>
+                    </div>
+                    <div class="dataset-card-meta glass-effect">
+                        <span class="dataset-card-label">Testing Set Size</span>
+                        <span class="dataset-card-value">10,000 Images</span>
+                    </div>
+                    <div class="dataset-card-meta glass-effect">
+                        <span class="dataset-card-label">Total Classes</span>
+                        <span class="dataset-card-value">10 Classes (0–9)</span>
+                    </div>
+                    <div class="dataset-card-meta glass-effect">
+                        <span class="dataset-card-label">Image Resolution</span>
+                        <span class="dataset-card-value">28×28 Grayscale</span>
+                    </div>
+                </div>
+
+                <!-- 2. Sample Digit Previews Section -->
+                <div class="glass-effect" style="border-radius: 20px; padding: 2rem; width: 100%;">
+                    <h3 class="samples-section-title">Sample Handwritten Glyphs</h3>
+                    <p class="samples-section-desc">Interactive SVG preview grids demonstrating standard handwritten digit contours from the training dataset batches.</p>
+                    
+                    <div class="samples-grid">
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 50 20 C 25 20, 25 80, 50 80 C 75 80, 75 20, 50 20 Z" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 0</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 40 25 L 52 18 L 52 80 M 42 80 L 62 80" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 1</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 30 30 C 30 10, 70 10, 70 30 C 70 50, 30 65, 30 80 L 70 80" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 2</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 30 25 C 50 22, 68 25, 55 45 C 72 55, 55 78, 30 75" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 3</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 60 20 L 30 55 L 75 55 M 62 20 L 62 80" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 4</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 68 20 L 35 20 L 35 48 C 45 42, 68 45, 62 70 C 55 85, 32 80, 32 68" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 5</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 60 20 C 45 25, 32 40, 32 60 C 32 80, 68 80, 68 60 C 68 45, 35 45, 35 60" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 6</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 28 22 L 72 22 L 45 80" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 7</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 50 48 C 30 48, 25 18, 50 18 C 75 18, 70 48, 50 48 Z M 50 48 C 30 48, 25 78, 50 78 C 75 78, 70 48, 50 48 Z" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 8</span>
+                        </div>
+                        <div class="sample-item">
+                            <div class="sample-canvas-preview">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M 50 50 C 70 50, 70 18, 50 18 C 30 18, 30 50, 50 50 Z M 66 30 L 66 65 C 66 80, 38 85, 32 75" />
+                                </svg>
+                            </div>
+                            <span class="sample-label">Digit Class: 9</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

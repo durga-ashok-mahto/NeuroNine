@@ -1,0 +1,200 @@
+/* NeuroNine Premium Upload Style Sheet */
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 650px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.upload-card {
+    width: 100%;
+    border-radius: 24px;
+    padding: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Drag & Drop zone */
+.drop-zone {
+    width: 100%;
+    min-height: 220px;
+    border: 2px dashed var(--input-border);
+    background: rgba(10, 10, 15, 0.2);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.drop-zone:hover {
+    border-color: var(--primary);
+    background: rgba(91, 124, 250, 0.04);
+}
+
+.drop-zone.drag-over {
+    border-color: var(--primary);
+    background: rgba(91, 124, 250, 0.08);
+    box-shadow: 0 0 0 4px var(--input-focus-glow);
+    transform: scale(1.01);
+}
+
+.drop-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: rgba(91, 124, 250, 0.1);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.drop-zone:hover .drop-icon-wrapper {
+    background: var(--primary);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.drop-icon-wrapper svg {
+    width: 26px;
+    height: 26px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.drop-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.drop-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+}
+
+.drop-formats {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.2rem;
+}
+
+#file-input {
+    display: none;
+}
+
+/* Uploaded Image Preview */
+.preview-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    animation: previewEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes previewEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.preview-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    background: #0b0f19;
+    max-width: 260px;
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#image-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.file-meta-info {
+    text-align: center;
+}
+
+.file-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+    margin-bottom: 0.15rem;
+}
+
+.file-size {
+    font-size: 0.72rem;
+    color: var(--text-sub);
+}
+
+/* Preview actions */
+.preview-actions {
+    display: flex;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 320px;
+}
+
+.btn-remove {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.15);
+}
+
+.btn-remove:hover {
+    background: #ff6b6b !important;
+    color: #ffffff !important;
+    border-color: #ff6b6b !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2) !important;
+}
+
+:root.light-theme .btn-remove {
+    background: rgba(214, 48, 49, 0.08);
+    color: #d63031;
+    border-color: rgba(214, 48, 49, 0.15);
+}
+
+:root.light-theme .btn-remove:hover {
+    background: #d63031 !important;
+    border-color: #d63031 !important;
+    box-shadow: 0 4px 12px rgba(214, 48, 49, 0.2) !important;
+}

@@ -1,0 +1,301 @@
+/* NeuroNine Premium Splash Style System */
+:root {
+    --primary: #5B7CFA;
+    --secondary: #7895B2;
+    --blue-gray: #6B7A8F;
+    --storm-gray: #566573;
+    --dark: #101820;
+    --light: #F5F7FA;
+    --accent: #90CAF9;
+    
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.splash-body {
+    background-color: var(--dark);
+    /* Stormy morning gradient blending dark and blue-gray slate elements */
+    background: radial-gradient(circle at center, #1b2533 0%, #101820 100%);
+    color: var(--light);
+    font-family: var(--font-body);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    /* Soft fade-out for page redirection */
+    transition: opacity 0.8s ease-in-out;
+}
+
+/* Canvas Background */
+.particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Glassmorphic Bento-Inspired Container */
+.splash-card {
+    position: relative;
+    z-index: 2;
+    background: rgba(26, 36, 50, 0.45);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(144, 202, 249, 0.12);
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    width: 90%;
+    max-width: 460px;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.5), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* Apple-like soft border glow transition */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+}
+
+.splash-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(144, 202, 249, 0.25);
+}
+
+/* Custom Neural Network SVG Logo */
+.logo-wrapper {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 2rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.neuro-logo {
+    width: 100%;
+    height: 100%;
+    /* Subtle neon shadow glow around logo shape */
+    filter: drop-shadow(0px 0px 10px rgba(91, 124, 250, 0.25));
+    animation: logoFloat 4s ease-in-out infinite;
+}
+
+/* Premium Logo float animation */
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0px 0px 10px rgba(91, 124, 250, 0.25));
+    }
+    50% {
+        transform: translateY(-6px) scale(1.02);
+        filter: drop-shadow(0px 0px 22px rgba(144, 202, 249, 0.55));
+    }
+}
+
+/* Vector Path Drawing Animations */
+.logo-path {
+    stroke-dashoffset: 250;
+    stroke-dasharray: 250;
+}
+
+.logo-loop {
+    animation: drawPath 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.logo-stem {
+    animation: drawPath 2.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+}
+
+@keyframes drawPath {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Synaptic Pulsing Node Animations */
+.logo-node {
+    transform-origin: center;
+    transition: fill 0.3s ease;
+}
+
+.node-pulse-fast {
+    animation: pulseNodeGlow 1.8s infinite ease-in-out;
+}
+
+.node-pulse-mid {
+    animation: pulseNodeGlow 2.4s infinite ease-in-out 0.4s;
+}
+
+.node-pulse-slow {
+    animation: pulseNodeGlow 3.2s infinite ease-in-out 0.8s;
+}
+
+@keyframes pulseNodeGlow {
+    0%, 100% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px var(--accent));
+    }
+}
+
+/* Brand Typography */
+.brand-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+    /* Soft entrance animation */
+    animation: fadeInText 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.brand-accent {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(91, 124, 250, 0.2);
+}
+
+.brand-tagline {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 3.5rem;
+    animation: fadeInText 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes fadeInText {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loader Box Bento Cell */
+.loader-box {
+    width: 100%;
+    background: rgba(86, 101, 115, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Status message with cursor */
+.status-msg-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.85rem;
+    height: 22px;
+}
+
+.status-text {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(144, 202, 249, 0.25);
+}
+
+.cursor {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-left: 2px;
+    animation: flash 1s steps(2, start) infinite;
+}
+
+@keyframes flash {
+    to {
+        visibility: hidden;
+    }
+}
+
+/* Progress Bar Components */
+.progress-bar-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(86, 101, 115, 0.25);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 20px;
+    box-shadow: 0 0 12px rgba(91, 124, 250, 0.6);
+    transition: width 0.15s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* Percent Container */
+.percent-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.percent-text {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--secondary);
+    letter-spacing: 0.5px;
+}
+
+/* Responsiveness settings */
+@media (max-width: 480px) {
+    .splash-card {
+        padding: 2.5rem 1.75rem;
+        max-width: 92%;
+    }
+    
+    .brand-title {
+        font-size: 2.3rem;
+    }
+    
+    .brand-tagline {
+        font-size: 0.8rem;
+        letter-spacing: 2.5px;
+        margin-bottom: 2.5rem;
+    }
+    
+    .loader-box {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .logo-wrapper {
+        width: 110px;
+        height: 110px;
+    }
+}

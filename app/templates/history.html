@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History — NeuroNine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Core Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <style>
+        .history-card {
+            border-radius: 20px;
+            padding: 1.8rem;
+            width: 100%;
+        }
+
+        .filter-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1.2rem;
+        }
+
+        .search-filters-box {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-select {
+            background: rgba(10, 10, 15, 0.35);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 0 0.75rem;
+            font-size: 0.8rem;
+            height: 38px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-select option {
+            background: #141923;
+            color: var(--text-main);
+        }
+
+        .search-history-input {
+            background: rgba(10, 10, 15, 0.35);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 0 0.85rem;
+            font-size: 0.82rem;
+            height: 38px;
+            width: 100%;
+            max-width: 240px;
+            outline: none;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(10, 10, 15, 0.15);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.82rem;
+        }
+
+        .history-table th, .history-table td {
+            padding: 0.9rem 1.1rem;
+            border-bottom: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+
+        .history-table th {
+            background: rgba(10, 10, 15, 0.3);
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.6px;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .thumbnail-preview {
+            width: 38px;
+            height: 38px;
+            background: #090c15;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            object-fit: cover;
+            display: block;
+        }
+
+        .badge-input-type {
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .type-draw {
+            background: rgba(91, 124, 250, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(91, 124, 250, 0.2);
+        }
+
+        .type-upload {
+            background: rgba(0, 255, 102, 0.1);
+            color: #00ff66;
+            border: 1px solid rgba(0, 255, 102, 0.2);
+        }
+
+        .type-camera {
+            background: rgba(255, 170, 0, 0.1);
+            color: #ffaa00;
+            border: 1px solid rgba(255, 170, 0, 0.2);
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-sub);
+        }
+
+        .no-records svg {
+            width: 48px;
+            height: 48px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* PDF Report Sheet Templates - rendered offscreen */
+        #report-pdf-template {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 680px;
+            background: #ffffff;
+            color: #1a202c;
+            padding: 2.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .pdf-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #5B7CFA;
+        }
+
+        .pdf-title-block {
+            text-align: right;
+        }
+
+        .pdf-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .pdf-date {
+            font-size: 0.72rem;
+            color: #718096;
+        }
+
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: 2fr 3fr;
+            gap: 2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .pdf-image-box {
+            background: #090c15;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+            height: 180px;
+        }
+
+        .pdf-image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .pdf-details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .pdf-details-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 0.4rem;
+            font-size: 0.85rem;
+        }
+
+        .pdf-details-label {
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .pdf-details-value {
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .pdf-predictions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .pdf-predictions-table th, .pdf-predictions-table td {
+            padding: 0.65rem 1rem;
+            text-align: left;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .pdf-predictions-table th {
+            background: #f7fafc;
+            color: #4a5568;
+            font-weight: 700;
+        }
+
+        .pdf-footer {
+            border-top: 1px solid #edf2f7;
+            padding-top: 1rem;
+            text-align: center;
+            font-size: 0.68rem;
+            color: #a0aec0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <!-- 1. Left Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo Header -->
+        <div class="logo-section">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="sidebar-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5B7CFA" />
+                        <stop offset="100%" stop-color="#90CAF9" />
+                    </linearGradient>
+                </defs>
+                <path d="M 100 45 A 30 30 0 1 1 99.9 45 Z" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" />
+                <path d="M 130 75 Q 130 145 90 155" fill="none" stroke="url(#sidebar-logo-grad)" stroke-width="12" stroke-linecap="round" />
+                <circle cx="100" cy="75" r="14" fill="#5B7CFA" />
+            </svg>
+            <span class="logo-title"><span class="logo-accent">Neuro</span>Nine</span>
+        </div>
+
+        <!-- Sidebar Navigation Menu links -->
+        <nav class="sidebar-menu">
+            <a href="{{ url_for('main.dashboard') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                Dashboard
+            </a>
+            <a href="{{ url_for('main.workspace') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Draw Digit
+            </a>
+            <a href="{{ url_for('main.upload') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Image
+            </a>
+            <a href="{{ url_for('main.camera') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                Camera
+            </a>
+            <a href="{{ url_for('main.history') }}" class="menu-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Prediction History
+            </a>
+            <a href="{{ url_for('main.analytics') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                Analytics
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.dataset') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                Dataset
+            </a>
+            <a href="{{ url_for('main.cnn_info') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                CNN Information
+            </a>
+            <a href="{{ url_for('main.reports') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Reports
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="{{ url_for('main.settings_route') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Settings
+            </a>
+            <a href="{{ url_for('main.about') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                About Developer
+            </a>
+            <a href="{{ url_for('main.logout') }}" class="menu-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </a>
+        </nav>
+
+        <!-- User profile cell at footer of sidebar -->
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">U</div>
+            <div class="user-info">
+                <div class="user-name">User Account</div>
+                <div class="user-role">ML Practitioner</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. Main content display panels -->
+    <main class="main-panel">
+        
+        <!-- Top Navigation Area -->
+        <header class="top-nav">
+            <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Toggle sidebar menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" placeholder="Search operations, models...">
+            </div>
+
+            <div class="nav-controls">
+                <button class="control-btn sound-on" id="sound-toggle" aria-label="Toggle ui sound cues">
+                    <div class="sound-waves">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </button>
+
+                <div class="lang-selector">
+                    <button class="lang-btn" id="lang-btn">
+                        <span>EN</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+
+                <button class="control-btn" id="theme-toggle" aria-label="Toggle color theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="18.36" x2="5.64" y2="19.78"></line>
+                        <line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>
+                    </svg>
+                </button>
+
+                <button class="control-btn" id="notification-btn" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+
+                <div class="nav-profile" onclick="window.location.href='{{ url_for('main.settings_route') }}'">
+                    <div class="avatar-wrapper">
+                        <div class="profile-avatar">U</div>
+                        <span class="status-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notification Success Toast -->
+        <div id="toast-success" class="toast-notification">
+            <span class="toast-icon">✓</span>
+            <span id="toast-text">History updated!</span>
+        </div>
+
+        <!-- Scrollable content workspace -->
+        <div class="dashboard-content">
+            
+            <div class="cnn-container" style="max-width: 1050px;">
+                <!-- Head Title Block -->
+                <div style="width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem;">
+                    <div>
+                        <!-- Breadcrumbs -->
+                        <div style="font-size: 0.72rem; color: var(--text-sub); margin-bottom: 0.45rem; display: flex; gap: 0.35rem; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                            <a href="{{ url_for('main.dashboard') }}" style="color: var(--text-sub); text-decoration: none;">Dashboard</a>
+                            <span>&gt;</span>
+                            <span style="color: var(--primary);">Prediction History</span>
+                        </div>
+                        <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem;">Prediction History</h2>
+                        <p class="instruction-text" style="text-align: left;">Track, filter, and export individual classification summaries.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.65rem;">
+                        <button class="tool-btn" id="btn-export-csv" title="Export current lists as CSV">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Export CSV
+                        </button>
+                        <button class="tool-btn btn-stop" id="btn-clear-all" title="Clear entire prediction lists">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- History main log table card -->
+                <div class="history-card glass-effect">
+                    
+                    <!-- Search & filter row controls -->
+                    <div class="filter-toolbar">
+                        <div class="search-filters-box">
+                            <input type="text" class="search-history-input" id="search-digit" placeholder="Search by Digit...">
+                            
+                            <select class="filter-select" id="filter-type">
+                                <option value="all">All Sources</option>
+                                <option value="Draw">Drawings</option>
+                                <option value="Upload">Uploads</option>
+                                <option value="Camera">Camera snaps</option>
+                            </select>
+
+                            <select class="filter-select" id="sort-date">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Prediction list table element -->
+                    <div class="table-responsive">
+                        <table class="history-table" id="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Preview</th>
+                                    <th>Source</th>
+                                    <th>Result</th>
+                                    <th>Confidence</th>
+                                    <th>Latency</th>
+                                    <th>Timestamp</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-tbody">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- No records indicator -->
+                    <div class="no-records" id="no-records-box" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <p style="font-size: 0.95rem; font-weight: 600; color: var(--text-main);">No Classification Records Found</p>
+                        <p style="font-size: 0.76rem; color: var(--text-sub); margin-top: 0.25rem;">Perform classification tests in workspace tools to generate logs.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- HTML Template for Offscreen PDF generation -->
+    <div id="report-pdf-template">
+        <div class="pdf-header">
+            <span class="pdf-logo">NeuroNine</span>
+            <div class="pdf-title-block">
+                <div class="pdf-title">Prediction Report</div>
+                <div class="pdf-date" id="pdf-report-date">Date: 2026-06-29</div>
+            </div>
+        </div>
+
+        <div class="pdf-grid">
+            <div>
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #718096; margin-bottom: 0.5rem;">Input Preview</div>
+                <div class="pdf-image-box">
+                    <img id="pdf-preview-img" src="" alt="Digit Preview">
+                </div>
+            </div>
+            <div>
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #718096; margin-bottom: 0.5rem;">Classification Details</div>
+                <div class="pdf-details-list">
+                    <div class="pdf-details-row">
+                        <span class="pdf-details-label">Predicted Digit</span>
+                        <span class="pdf-details-value" id="pdf-pred-digit" style="font-size: 1.1rem; color: #5B7CFA;">8</span>
+                    </div>
+                    <div class="pdf-details-row">
+                        <span class="pdf-details-label">Confidence Score</span>
+                        <span class="pdf-details-value" id="pdf-pred-conf">98.7%</span>
+                    </div>
+                    <div class="pdf-details-row">
+                        <span class="pdf-details-label">Latency / Duration</span>
+                        <span class="pdf-details-value" id="pdf-pred-time">12.4ms</span>
+                    </div>
+                    <div class="pdf-details-row">
+                        <span class="pdf-details-label">Input Source</span>
+                        <span class="pdf-details-value" id="pdf-pred-source">Canvas Draw</span>
+                    </div>
+                    <div class="pdf-details-row">
+                        <span class="pdf-details-label">Classification ID</span>
+                        <span class="pdf-details-value" id="pdf-pred-id" style="font-size: 0.7rem; font-family: monospace;">pred_12903810</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #718096; margin-bottom: 0.65rem;">Model & Hardware Log</div>
+            <div style="font-size: 0.76rem; line-height: 1.5; color: #4a5568; background: #f7fafc; padding: 0.85rem; border-radius: 8px; border: 1px solid #edf2f7; text-align: left;">
+                <strong>Classification Network:</strong> Sequential CNN (2D Convolution -> ReLU -> MaxPooling -> Dense -> Softmax)<br>
+                <strong>Training Corpus:</strong> MNIST Handwriting Database (60k train nodes, 10k validation nodes)<br>
+                <strong>Test Bench Accuracy:</strong> 99.12% benchmark parameters
+            </div>
+        </div>
+
+        <table class="pdf-predictions-table">
+            <thead>
+                <tr>
+                    <th>Digit Rank</th>
+                    <th>Class Index</th>
+                    <th>Probability Percentage</th>
+                </tr>
+            </thead>
+            <tbody id="pdf-table-tbody">
+                <!-- dynamic rows -->
+            </tbody>
+        </table>
+
+        <div class="pdf-footer">
+            NeuroNine ML Suite — Inferences processed locally in the client browser session wrapper.
+        </div>
+    </div>
+
+    <!-- html2pdf CDNs and local rendering JS logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- History persist lists ---
+            const tbody = document.getElementById("history-tbody");
+            const noRecordsBox = document.getElementById("no-records-box");
+            const btnClearAll = document.getElementById("btn-clear-all");
+            const btnExportCSV = document.getElementById("btn-export-csv");
+            
+            const searchDigit = document.getElementById("search-digit");
+            const filterType = document.getElementById("filter-type");
+            const sortDate = document.getElementById("sort-date");
+
+            const toast = document.getElementById("toast-success");
+            const toastText = document.getElementById("toast-text");
+
+            function showToast(message, isError = false) {
+                toastText.textContent = message;
+                if (isError) {
+                    toast.style.borderColor = "var(--error-color)";
+                    const icon = toast.querySelector(".toast-icon");
+                    icon.textContent = "✕";
+                    icon.style.backgroundColor = "var(--error-color)";
+                } else {
+                    toast.style.borderColor = "rgba(0, 255, 102, 0.25)";
+                    const icon = toast.querySelector(".toast-icon");
+                    icon.textContent = "✓";
+                    icon.style.backgroundColor = "#00ff66";
+                }
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 2500);
+            }
+
+            function loadHistory() {
+                let records = JSON.parse(localStorage.getItem("prediction_history") || "[]");
+                
+                // Filter search
+                const query = searchDigit.value.trim();
+                if (query !== "") {
+                    records = records.filter(r => r.digit.toString() === query);
+                }
+                
+                // Filter type
+                const source = filterType.value;
+                if (source !== "all") {
+                    records = records.filter(r => r.inputType === source);
+                }
+
+                // Sort date
+                if (sortDate.value === "newest") {
+                    records.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                } else {
+                    records.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+                }
+
+                if (records.length === 0) {
+                    tbody.innerHTML = "";
+                    noRecordsBox.style.display = "block";
+                    return;
+                }
+                noRecordsBox.style.display = "none";
+
+                tbody.innerHTML = "";
+                records.forEach(item => {
+                    const row = document.createElement("tr");
+                    
+                    const formattedDate = new Date(item.timestamp).toLocaleString();
+                    const latencyText = item.latency.toFixed(1) + "ms";
+                    const confText = (item.confidence * 100).toFixed(1) + "%";
+
+                    row.innerHTML = `
+                        <td><img class="thumbnail-preview" src="${item.image || ''}" alt="Preview"></td>
+                        <td><span class="badge-input-type type-${item.inputType.toLowerCase()}">${item.inputType}</span></td>
+                        <td style="font-weight:800; font-size:1.1rem; color:var(--primary);">${item.digit}</td>
+                        <td style="font-weight:700;">${confText}</td>
+                        <td>${latencyText}</td>
+                        <td style="color:var(--text-sub); font-size:0.75rem;">${formattedDate}</td>
+                        <td style="text-align:right;">
+                            <div style="display:flex; gap:0.4rem; justify-content:flex-end;">
+                                <button class="tool-btn btn-pdf" style="height:28px; font-size:0.7rem; padding:0 0.5rem; width:auto;" data-id="${item.id}">PDF</button>
+                                <button class="tool-btn btn-stop btn-del" style="height:28px; font-size:0.7rem; padding:0 0.5rem; width:auto;" data-id="${item.id}">Delete</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Attach button list listeners
+                document.querySelectorAll(".btn-del").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        const id = e.target.getAttribute("data-id");
+                        deleteRecord(id);
+                    });
+                });
+
+                document.querySelectorAll(".btn-pdf").forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        const id = e.target.getAttribute("data-id");
+                        generatePDFReport(id);
+                    });
+                });
+            }
+
+            function deleteRecord(id) {
+                let history = JSON.parse(localStorage.getItem("prediction_history") || "[]");
+                history = history.filter(r => r.id !== id);
+                localStorage.setItem("prediction_history", JSON.stringify(history));
+                showToast("Record deleted successfully.", false);
+                loadHistory();
+            }
+
+            // Export history as CSV
+            btnExportCSV.addEventListener("click", () => {
+                let history = JSON.parse(localStorage.getItem("prediction_history") || "[]");
+                if (history.length === 0) {
+                    showToast("No predictions recorded in history.", true);
+                    return;
+                }
+                
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "ID,Input Type,Predicted Digit,Confidence,Latency (ms),Timestamp\n";
+                history.forEach(item => {
+                    csvContent += `${item.id},${item.inputType},${item.digit},${(item.confidence*100).toFixed(1)}%,${item.latency.toFixed(1)},${item.timestamp}\n`;
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "prediction_history.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast("History exported as CSV.", false);
+            });
+
+            // Clear all history logs
+            btnClearAll.addEventListener("click", () => {
+                if (confirm("Are you sure you want to clear the entire prediction log history?")) {
+                    localStorage.removeItem("prediction_history");
+                    showToast("All prediction history cleared.", false);
+                    loadHistory();
+                }
+            });
+
+            // Filter triggers
+            searchDigit.addEventListener("input", loadHistory);
+            filterType.addEventListener("change", loadHistory);
+            sortDate.addEventListener("change", loadHistory);
+
+            // PDF report rendering handler
+            function generatePDFReport(id) {
+                const history = JSON.parse(localStorage.getItem("prediction_history") || "[]");
+                const record = history.find(r => r.id === id);
+                if (!record) return;
+
+                // Bind details in template HTML sheet
+                document.getElementById("pdf-report-date").textContent = "Timestamp: " + new Date(record.timestamp).toLocaleString();
+                document.getElementById("pdf-preview-img").src = record.image;
+                document.getElementById("pdf-pred-digit").textContent = record.digit;
+                document.getElementById("pdf-pred-conf").textContent = (record.confidence * 100).toFixed(2) + "%";
+                document.getElementById("pdf-pred-time").textContent = record.latency.toFixed(1) + "ms";
+                document.getElementById("pdf-pred-source").textContent = record.inputType;
+                document.getElementById("pdf-pred-id").textContent = record.id;
+
+                const pdfTbody = document.getElementById("pdf-table-tbody");
+                pdfTbody.innerHTML = "";
+
+                const digitWords = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+                if (record.top3) {
+                    record.top3.forEach((item, index) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>Rank #${index + 1}</td>
+                            <td>${item.digit} (${digitWords[item.digit]})</td>
+                            <td style="font-weight:700;">${(item.probability * 100).toFixed(2)}%</td>
+                        `;
+                        pdfTbody.appendChild(row);
+                    });
+                }
+
+                // Call html2pdf bundle
+                const element = document.getElementById("report-pdf-template");
+                const opt = {
+                    margin:       0.5,
+                    filename:     `neuronine_report_${record.id}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).save()
+                    .then(() => {
+                        showToast("PDF report downloaded successfully.", false);
+                    })
+                    .catch(err => {
+                        console.error("PDF generation error:", err);
+                        showToast("PDF generation failed.", true);
+                    });
+            }
+
+            // Load on init
+            loadHistory();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,943 @@
+/* NeuroNine Premium Dashboard Style System */
+:root {
+    /* Base Color Palette variables */
+    --primary: #5B7CFA;
+    --secondary: #7895B2;
+    --blue-gray: #6B7A8F;
+    --storm-gray: #566573;
+    --dark: #101820;
+    --light: #F5F7FA;
+    --accent: #90CAF9;
+    
+    /* Semantic variables defaulting to Dark theme */
+    --dash-bg: #0b0f19;
+    --panel-bg: rgba(18, 26, 38, 0.45);
+    --card-bg: rgba(22, 32, 47, 0.4);
+    --card-border: rgba(144, 202, 249, 0.09);
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    
+    --text-main: var(--light);
+    --text-sub: var(--secondary);
+    --text-muted: #566573;
+    
+    --input-bg: rgba(10, 10, 15, 0.35);
+    --input-border: rgba(144, 202, 249, 0.1);
+    --input-focus-border: var(--primary);
+    --input-focus-glow: rgba(91, 124, 250, 0.2);
+    
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    
+    --sidebar-width: 250px;
+    --header-height: 70px;
+}
+
+/* Light Theme overrides manually triggered by class or system default */
+:root.light-theme,
+:root.light-theme-default {
+    --dash-bg: #f3f5f9;
+    --panel-bg: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.6);
+    --card-border: rgba(107, 122, 143, 0.15);
+    --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    --text-main: var(--dark);
+    --text-sub: var(--storm-gray);
+    --text-muted: var(--secondary);
+    
+    --input-bg: rgba(255, 255, 255, 0.85);
+    --input-border: rgba(107, 122, 143, 0.2);
+    --input-focus-border: var(--primary);
+    --input-focus-glow: rgba(91, 124, 250, 0.15);
+}
+
+@media (prefers-color-scheme: light) {
+    /* Automatically load Light variables if no explicit override */
+    :root:not(.dark-theme) {
+        --dash-bg: #f3f5f9;
+        --panel-bg: rgba(255, 255, 255, 0.7);
+        --card-bg: rgba(255, 255, 255, 0.6);
+        --card-border: rgba(107, 122, 143, 0.15);
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        
+        --text-main: var(--dark);
+        --text-sub: var(--storm-gray);
+        --text-muted: var(--secondary);
+        
+        --input-bg: rgba(255, 255, 255, 0.85);
+        --input-border: rgba(107, 122, 143, 0.2);
+        --input-focus-border: var(--primary);
+        --input-focus-glow: rgba(91, 124, 250, 0.15);
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.dashboard-body {
+    background-color: var(--dash-bg);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism utility */
+.glass-effect {
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+}
+
+/* ================================================================= */
+/* 1. Left Sidebar Layout */
+/* ================================================================= */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--panel-bg);
+    border-right: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Logo Section */
+.logo-section {
+    padding: 1.5rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.logo-section svg {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 4px rgba(91, 124, 250, 0.3));
+}
+
+.logo-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-main);
+}
+
+.logo-accent {
+    color: var(--primary);
+}
+
+/* Sidebar Scrollable Menu */
+.sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+/* Custom scrollbar for sidebar menu */
+.sidebar-menu::-webkit-scrollbar {
+    width: 4px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 4px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-sub);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.menu-item svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    transition: transform 0.25s ease;
+}
+
+.menu-item:hover {
+    color: var(--text-main);
+    background: rgba(91, 124, 250, 0.08);
+}
+
+.menu-item:hover svg {
+    transform: translateX(2px);
+}
+
+.menu-item.active {
+    color: #ffffff;
+    background: var(--primary);
+    box-shadow: 0 4px 15px rgba(91, 124, 250, 0.25);
+}
+
+.menu-item.active svg {
+    stroke: #ffffff;
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 0.75rem 0.5rem;
+}
+
+/* User Account Section on bottom of Sidebar */
+.sidebar-user {
+    padding: 1rem;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid var(--card-border);
+}
+
+.user-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.user-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================================================================= */
+/* 2. Main Content Layout */
+/* ================================================================= */
+.main-panel {
+    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ================================================================= */
+/* 3. Top Navigation Bar */
+/* ================================================================= */
+.top-nav {
+    height: var(--header-height);
+    width: 100%;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 90;
+    transition: background-color 0.3s ease;
+}
+
+/* Mobile Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Search Bar styling */
+.search-container {
+    position: relative;
+    max-width: 300px;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-sub);
+    pointer-events: none;
+    width: 15px;
+    height: 15px;
+}
+
+.search-input {
+    width: 100%;
+    height: 38px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    padding: 0 1rem 0 2.2rem;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px var(--input-focus-glow);
+}
+
+/* Right Nav Controls */
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.control-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.control-btn:hover {
+    color: var(--text-main);
+    background: rgba(91, 124, 250, 0.08);
+    border-color: rgba(91, 124, 250, 0.2);
+}
+
+.control-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Sound wave animation toggle */
+.sound-waves {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+}
+
+.sound-bar {
+    width: 2px;
+    height: 100%;
+    background-color: currentColor;
+    border-radius: 1px;
+    transition: height 0.2s ease;
+}
+
+.control-btn.sound-on .sound-bar:nth-child(1) { animation: wavePulse 0.6s infinite alternate 0.1s; }
+.control-btn.sound-on .sound-bar:nth-child(2) { animation: wavePulse 0.6s infinite alternate 0.3s; }
+.control-btn.sound-on .sound-bar:nth-child(3) { animation: wavePulse 0.6s infinite alternate 0.2s; }
+.control-btn.sound-off .sound-bar {
+    height: 3px !important;
+}
+
+@keyframes wavePulse {
+    0% { height: 3px; }
+    100% { height: 12px; }
+}
+
+/* Notification badge */
+.badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    box-shadow: 0 0 8px var(--primary);
+}
+
+/* Language Dropdown Selector styling */
+.lang-selector {
+    position: relative;
+}
+
+.lang-btn {
+    height: 36px;
+    padding: 0 0.85rem;
+    border-radius: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+    color: var(--text-main);
+    background: rgba(91, 124, 250, 0.08);
+}
+
+/* Profile Icon Status */
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.avatar-wrapper {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 2px solid var(--card-border);
+}
+
+.status-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 10px;
+    height: 10px;
+    background: #00ff66;
+    border: 2px solid var(--dash-bg);
+    border-radius: 50%;
+}
+
+/* ================================================================= */
+/* 4. Dashboard Content Area */
+/* ================================================================= */
+.dashboard-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Custom scrollbars for panel contents */
+.dashboard-content::-webkit-scrollbar {
+    width: 6px;
+}
+.dashboard-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.dashboard-content::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 10px;
+}
+
+/* ================================================================= */
+/* 5. Welcome Banner Section & Neural Canvas */
+/* ================================================================= */
+.welcome-banner {
+    position: relative;
+    border-radius: 20px;
+    padding: 2.2rem 2.5rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 160px;
+}
+
+.welcome-info {
+    position: relative;
+    z-index: 10;
+    max-width: 50%;
+}
+
+.welcome-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 0.35rem;
+    line-height: 1.1;
+    animation: textFadeIn 0.8s ease;
+}
+
+.welcome-title .accent {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-subtitle {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    animation: textFadeIn 1s ease;
+}
+
+/* Neural Network Simulation Canvas container */
+.canvas-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 55%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+#neural-net-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes textFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================================= */
+/* 6. Bento Grid Layout */
+/* ================================================================= */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(140px, auto);
+    gap: 1.25rem;
+}
+
+/* Bento Card Styles */
+.bento-card {
+    border-radius: 20px;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(800px circle at var(--x, 0) var(--y, 0), rgba(91, 124, 250, 0.06), transparent 40%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bento-card:hover::before {
+    opacity: 1;
+}
+
+/* Hover scales and lifting */
+.bento-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(91, 124, 250, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.bento-card:active {
+    transform: scale(0.985) translateY(-2px);
+}
+
+/* Card Header elements */
+.card-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(91, 124, 250, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    margin-bottom: 1.2rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+.bento-card:hover .card-header-icon {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.card-header-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Card Information contents */
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.card-description {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    line-height: 1.4;
+}
+
+/* Varied spans creating bento layout dimensions */
+.span-col-2 {
+    grid-column: span 2;
+}
+
+.span-row-2 {
+    grid-row: span 2;
+}
+
+.span-col-3 {
+    grid-column: span 3;
+}
+
+/* Specific bento content modules */
+.live-telemetry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex: 1;
+    margin-top: 1rem;
+}
+
+.radial-progress {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+
+.radial-svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: rgba(86, 101, 115, 0.15);
+    stroke-width: 8;
+}
+
+.circle-val {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 251.2;
+    stroke-dashoffset: 251.2;
+    animation: fillProgress 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fillProgress {
+    to { stroke-dashoffset: 2.512; } /* 99% accuracy indicator */
+}
+
+.radial-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* History logs list module */
+.history-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.85rem;
+    background: rgba(10, 10, 15, 0.2);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(91, 124, 250, 0.05);
+}
+
+.hist-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.hist-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(144, 202, 249, 0.1);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.75rem;
+}
+
+.hist-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.hist-title {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.hist-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.hist-conf {
+    font-weight: 700;
+    color: #00ff66;
+}
+
+/* CNN summary list style */
+.cnn-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-top: 1rem;
+    flex: 1;
+}
+
+.cnn-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(86, 101, 115, 0.1);
+    padding-bottom: 0.4rem;
+}
+
+.cnn-stat-label {
+    color: var(--text-sub);
+}
+
+.cnn-stat-val {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* ================================================================= */
+/* 7. Responsive Styles and Media Queries */
+/* ================================================================= */
+@media (max-width: 1024px) {
+    .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .top-nav {
+        padding: 0 1.2rem;
+    }
+    
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    
+    .welcome-info {
+        max-width: 100%;
+    }
+    
+    .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+    
+    .span-col-2, .span-col-3 {
+        grid-column: span 1;
+    }
+    
+    .dashboard-content {
+        padding: 1.2rem;
+        gap: 1.2rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.8rem;
+    }
+    
+    .top-nav {
+        gap: 0.5rem;
+    }
+    
+    .search-container {
+        display: none; /* Hide search bar on very narrow screens */
+    }
+}
+
+/* ================================================================= */
+/* 8. Premium Micro-Interactions, Focus Indicators, and Glowing Loops */
+/* ================================================================= */
+.tool-btn:active, .menu-item:active, .control-btn:active, .lang-btn:active, .social-btn:active {
+    transform: scale(0.97);
+}
+
+.tool-btn:focus-visible, .menu-item:focus-visible, .control-btn:focus-visible, .settings-select:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 2px;
+}
+
+.thinking-glow {
+    animation: thinkingGlow 1.8s infinite ease-in-out !important;
+}
+
+@keyframes thinkingGlow {
+    0%, 100% {
+        border-color: var(--card-border);
+        box-shadow: none;
+    }
+    50% {
+        border-color: var(--primary);
+        box-shadow: 0 0 16px rgba(91, 124, 250, 0.45);
+    }
+}
+
+/* Dropdowns, option boxes legibility styles in dark and light themes */
+select {
+    color-scheme: dark;
+}
+
+:root.light-theme select {
+    color-scheme: light;
+}
+
+select option {
+    background-color: #141923 !important;
+    color: #F5F7FA !important;
+}
+
+:root.light-theme select option {
+    background-color: #ffffff !important;
+    color: #101820 !important;
+}
+
